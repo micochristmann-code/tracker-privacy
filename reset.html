@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Neues Passwort – Tracker</title>
+  <style>
+    :root { --bg:#FAFAF8; --text:#0D0D0D; --muted:#6b6b6b; --accent:#A8D400; --line:#e6e6e2; --err:#b3261e; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65; padding: 0 20px;
+    }
+    .wrap { max-width: 440px; margin: 0 auto; padding: 56px 0 80px; }
+    h1 { font-size: 30px; margin: 0 0 4px; }
+    .sub { color: var(--muted); margin: 0 0 28px; font-size: 15px; }
+    p { font-size: 16px; }
+    a { color: #4a7000; }
+    .box { border: 1px solid var(--line); border-radius: 14px; padding: 20px; background: #fff; }
+    label { display: block; font-size: 14px; font-weight: 600; margin: 0 0 6px; }
+    input[type=password], input[type=text] {
+      width: 100%; font: inherit; font-size: 16px; padding: 12px 14px;
+      border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text);
+      margin: 0 0 16px;
+    }
+    input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .show { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); margin: -4px 0 18px; }
+    button {
+      width: 100%; font: inherit; font-size: 16px; font-weight: 600; padding: 13px;
+      border: none; border-radius: 999px; background: var(--accent); color: var(--text); cursor: pointer;
+    }
+    button:disabled { opacity: .55; cursor: default; }
+    .msg { font-size: 15px; margin: 14px 0 0; }
+    .msg.err { color: var(--err); }
+    .hidden { display: none; }
+    .foot { color: var(--muted); font-size: 13px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Neues Passwort</h1>
+    <p class="sub">App „Tracker"</p>
+
+    <!-- Formular -->
+    <div id="form-view" class="box">
+      <form id="form" novalidate>
+        <label for="pw1">Neues Passwort</label>
+        <input id="pw1" type="password" autocomplete="new-password" placeholder="Mindestens 8 Zeichen" required>
+        <label for="pw2">Passwort wiederholen</label>
+        <input id="pw2" type="password" autocomplete="new-password" required>
+        <label class="show"><input id="show" type="checkbox"> Passwort anzeigen</label>
+        <button id="btn" type="submit">Speichern</button>
+        <p id="msg" class="msg err" role="alert"></p>
+      </form>
+    </div>
+
+    <!-- Erfolg -->
+    <div id="done-view" class="box hidden">
+      <p style="margin:0"><strong>Geschafft! ✅</strong><br>
+      Dein Passwort ist geändert. Öffne jetzt die Tracker-App und melde dich
+      mit dem neuen Passwort an.</p>
+    </div>
+
+    <!-- Link kaputt -->
+    <div id="bad-view" class="box hidden">
+      <p style="margin:0"><strong>Link ungültig oder abgelaufen</strong><br>
+      Der Link gilt eine Stunde und nur einmal. Fordere in der App unter
+      <em>Anmelden → Passwort vergessen?</em> einfach einen neuen an.</p>
+    </div>
+
+    <p class="foot"><a href="./">Datenschutz</a> · <a href="impressum.html">Impressum</a></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    // Öffentliche Werte, identisch mit der App (lib/config/supabase_config.dart).
+    const SUPABASE_URL = 'https://zyphtmawvaqigftfradu.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_rWIM6wtLWphGw7WQvP72ug_Xm3K2EgF';
+
+    const params = new URLSearchParams(location.search);
+    const tokenHash = params.get('token_hash');
+    const type = params.get('type');
+
+    const $ = (id) => document.getElementById(id);
+    const show = (id) => {
+      for (const v of ['form-view', 'done-view', 'bad-view']) $(v).classList.toggle('hidden', v !== id);
+    };
+
+    // Code nicht in der Adresszeile/History stehen lassen.
+    if (tokenHash) history.replaceState(null, '', location.pathname);
+
+    if (!tokenHash || type !== 'recovery' || !window.supabase) {
+      show('bad-view');
+    }
+
+    const client = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    });
+
+    // Den Code erst beim Speichern einlösen, nicht beim Öffnen: Mail-Programme
+    // rufen Links teils vorab auf und würden ihn sonst verbrauchen.
+    let verified = false;
+
+    $('show').addEventListener('change', (e) => {
+      const t = e.target.checked ? 'text' : 'password';
+      $('pw1').type = t;
+      $('pw2').type = t;
+    });
+
+    $('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pw1 = $('pw1').value;
+      const pw2 = $('pw2').value;
+      $('msg').textContent = '';
+      if (pw1.length < 8) return ($('msg').textContent = 'Bitte mindestens 8 Zeichen.');
+      if (pw1 !== pw2) return ($('msg').textContent = 'Die Passwörter stimmen nicht überein.');
+
+      $('btn').disabled = true;
+      $('btn').textContent = 'Speichere …';
+      try {
+        if (!verified) {
+          const { error } = await client.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
+          if (error) return show('bad-view');
+          verified = true;
+        }
+        const { error } = await client.auth.updateUser({ password: pw1 });
+        if (error) {
+          $('msg').textContent = errorText(error);
+          return;
+        }
+        await client.auth.signOut({ scope: 'local' });
+        show('done-view');
+      } catch (_) {
+        $('msg').textContent = 'Keine Verbindung. Prüf dein Internet und versuch es nochmal.';
+      } finally {
+        $('btn').disabled = false;
+        $('btn').textContent = 'Speichern';
+      }
+    });
+
+    function errorText(error) {
+      switch (error.code) {
+        case 'same_password': return 'Das neue Passwort muss sich vom alten unterscheiden.';
+        case 'weak_password': return 'Das Passwort ist zu schwach. Nimm ein längeres oder eins mit Zahlen.';
+        case 'session_expired':
+        case 'session_not_found': show('bad-view'); return '';
+        default: return 'Das hat nicht geklappt. Versuch es gleich nochmal.';
+      }
+    }
+  </script>
+</body>
+</html>
