@@ -27,7 +27,7 @@
 <body>
   <div class="wrap">
     <h1>Datenschutzerklärung</h1>
-    <p class="sub">App „Tracker" · Stand: September 2026</p>
+    <p class="sub">App „Tracker" · Stand: Oktober 2026</p>
 
     <div class="box">
       <p style="margin:0">Diese App wird privat entwickelt. Wir nehmen den Schutz deiner
@@ -69,6 +69,26 @@
       <li><strong>Fotos:</strong> wenn du ein Foto deiner Mahlzeit aufnimmst, wird dieses
       zur Nährwert-Analyse verarbeitet. Das Foto wird <strong>nicht dauerhaft gespeichert</strong>,
       sondern nur für die Analyse verwendet.</li>
+      <li><strong>Barcode-Scan:</strong> Das Kamerabild wird nur auf deinem Gerät
+      ausgewertet; an unseren Server geht allein die Nummer des Strichcodes. Der
+      Server fragt damit die Produktdaten bei Open Food Facts ab, einer offenen
+      Lebensmitteldatenbank. Dorthin gelangt nur die Barcode-Nummer, und die Anfrage
+      kommt von unserem Server, nicht von deinem Gerät — Open Food Facts erfährt also
+      nicht, wer gescannt hat. Gefundene Produkte (Name, Marke, Nährwerte) speichern wir
+      ohne Bezug zu deinem Konto in einer Produktliste, damit der nächste Scan schneller
+      geht; dabei zählen wir nur, wie oft ein Produkt gescannt wurde.</li>
+      <li><strong>Server-Protokolle:</strong> Beim Betrieb des Servers entstehen
+      Protokolle (Logs). Sie können technische Angaben wie Zeitpunkt, aufgerufene
+      Funktion, Fehlermeldungen und die IP-Adresse der Anfrage enthalten, außerdem
+      Einträge dazu, was erfasst wurde — etwa den Text einer Mahlzeiten-Beschreibung.
+      Statt deines Namens, deiner E-Mail-Adresse oder deiner Nutzer-ID steht dort nur
+      ein pseudonymes Kürzel, das sich ohne einen geheimen Schlüssel niemandem zuordnen
+      lässt. Wir nutzen die Protokolle, um Fehler zu finden, Missbrauch abzuwehren und
+      die Erkennung von Mahlzeiten zu verbessern (berechtigtes Interesse,
+      Art. 6 Abs. 1 lit. f DSGVO). Unser Hosting-Dienstleister Render löscht sie
+      automatisch nach 7 Tagen. Einzelne Eingaben, an denen sich zeigt, wo die
+      Erkennung danebenlag, übernehmen wir vorher ohne jedes Kürzel in unsere
+      Entwicklungsnotizen.</li>
     </ul>
 
     <h2>3. Zwecke der Verarbeitung</h2>
@@ -101,7 +121,8 @@
     <p>Zur Bereitstellung der App nutzen wir sorgfältig ausgewählte Dienstleister
     (Auftragsverarbeiter):</p>
     <ul>
-      <li><strong>Hosting des Servers:</strong> Render – betreibt unseren Anwendungsserver.</li>
+      <li><strong>Hosting des Servers:</strong> Render – betreibt unseren Anwendungsserver
+      und speichert dessen Protokolle.</li>
       <li><strong>Anmeldung &amp; Datenbank:</strong> Supabase – wickelt die Anmeldung ab
       und speichert deine Konto- und Mahlzeiten-Daten (Server in der EU).</li>
       <li><strong>KI-Analyse:</strong> Google (Gemini API) – verarbeitet deine
@@ -111,10 +132,16 @@
     <p>Deine Bewegungsdaten aus Apple Health werden <strong>nicht</strong> an die
     KI-Analyse weitergegeben. Sie werden ausschließlich auf unserem eigenen Server
     verarbeitet und in der Datenbank bei Supabase gespeichert.</p>
+    <p>Für den Barcode-Scan fragen wir außerdem Open Food Facts ab. Das ist kein
+    Auftragsverarbeiter: Dorthin gelangen keine Angaben zu deiner Person, nur die
+    Nummer des gescannten Strichcodes.</p>
 
     <h2>6. Speicherdauer</h2>
     <p>Deine Daten werden gespeichert, solange dein Konto besteht. Löschst du dein
     Konto, werden deine Daten dauerhaft entfernt.</p>
+    <p>Server-Protokolle werden nach 7 Tagen automatisch gelöscht. Die Produktliste aus
+    Barcode-Scans enthält keine Angaben zu dir und bleibt deshalb auch nach dem Löschen
+    deines Kontos bestehen.</p>
 
     <h2>7. Deine Rechte</h2>
     <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der
