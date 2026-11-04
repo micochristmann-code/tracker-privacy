@@ -27,7 +27,7 @@
 <body>
   <div class="wrap">
     <h1>Datenschutzerklärung</h1>
-    <p class="sub">App „Tracker" · Stand: Oktober 2026</p>
+    <p class="sub">App „Tracker" · Stand: November 2026</p>
 
     <div class="box">
       <p style="margin:0">Diese App wird privat entwickelt. Wir nehmen den Schutz deiner
@@ -47,6 +47,14 @@
       angegebener Name und ein Passwort zur Anmeldung. Die Anmeldung wird über unseren
       Dienstleister Supabase abgewickelt; dein Passwort wird dort ausschließlich als
       nicht umkehrbarer Hash gespeichert, nie im Klartext.</li>
+      <li><strong>E-Mails:</strong> Zum Bestätigen deiner E-Mail-Adresse und zum
+      Zurücksetzen deines Passworts schicken wir dir E-Mails. Dafür erhält unser
+      Versanddienst Resend deine Adresse und den Inhalt der Mail.</li>
+      <li><strong>Abo und Probezeit:</strong> ob und bis wann du Pro nutzen kannst
+      (Ende deiner Probezeit, Ablaufdatum deines Abos) und wie viele Texte du am Tag
+      erfasst hast, damit die Gratis-Grenze stimmt. Den Kauf eines Abos wickelt Apple
+      ab. Deine Zahlungsdaten wie Karten- oder Kontonummer erhalten wir nicht. Ob
+      dein Abo läuft, erfahren wir über unseren Dienstleister RevenueCat.</li>
       <li><strong>Mahlzeiten-Daten:</strong> die von dir erfassten Mahlzeiten mit
       Bezeichnung, Kalorien, Eiweiß, Fett, Kohlenhydraten und Ballaststoffen sowie deine
       selbst gewählten Ziele.</li>
@@ -57,6 +65,12 @@
       persönlichen Tagesziele.</li>
       <li><strong>Trink-Daten:</strong> die von dir erfasste Trinkmenge pro Tag und
       dein selbst eingestelltes Wasserziel.</li>
+      <li><strong>Coach-Anfragen:</strong> was du den Coach fragst (etwa eine
+      Essensidee, die du eintippst), wie viel von deinem Tagesbudget in dem Moment
+      übrig ist, welche Vorschläge er dir zeigt und welchen davon du erfasst. Damit
+      sorgt der Coach für Abwechslung, und wir prüfen und verbessern damit seine
+      Vorschläge (berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO). Die Einträge
+      werden mit deinem Konto gelöscht.</li>
       <li><strong>Bewegungsdaten aus Apple Health</strong> (nur iPhone, freiwillig):
       Schaltest du in den Einstellungen „Aktivität anrechnen" ein und erlaubst den
       Zugriff im Dialog von iOS, liest die App deine <em>verbrannten Aktivkalorien
@@ -93,15 +107,18 @@
     </ul>
 
     <h2>3. Zwecke der Verarbeitung</h2>
-    <p>Wir verarbeiten deine Daten ausschließlich, um dir die Funktionen der App
-    bereitzustellen: Anmeldung, Erfassung und Auswertung deiner Ernährung sowie die
-    KI-gestützte Schätzung von Nährwerten.</p>
+    <p>Wir verarbeiten deine Daten, um dir die Funktionen der App bereitzustellen:
+    Anmeldung, Erfassung und Auswertung deiner Ernährung, die KI-gestützte Schätzung
+    von Nährwerten sowie die Verwaltung deiner Probezeit und deines Abos. Außerdem
+    nutzen wir die Server-Protokolle und die Coach-Anfragen, um Fehler zu finden und
+    die Erkennung von Mahlzeiten und die Vorschläge des Coaches zu verbessern.</p>
 
     <h2>4. Rechtsgrundlage</h2>
     <p>Die Verarbeitung erfolgt zur Erfüllung des Nutzungsvertrags
     (Art. 6 Abs. 1 lit. b DSGVO) sowie, soweit erforderlich, auf Grundlage deiner
     Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), die du bei der Registrierung
-    ausdrücklich erteilst.</p>
+    ausdrücklich erteilst. Wo wir es oben angeben, stützen wir uns auf unser
+    berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO).</p>
     <p>Soweit wir Gesundheitsdaten verarbeiten — dein Gewicht und deine
     Körpermaße sowie, falls du sie einschaltest, deine Bewegungsdaten aus Apple
     Health — stützen wir uns zusätzlich auf deine ausdrückliche Einwilligung nach
@@ -129,7 +146,31 @@
       <li><strong>KI-Analyse:</strong> Google (Gemini API) – verarbeitet deine
       Mahlzeiten-Beschreibung bzw. das Foto, um Nährwerte zu schätzen, sowie deine
       Profilangaben (inkl. Hobbys/Sport), um deine Tagesziele zu berechnen.</li>
+      <li><strong>Abo-Verwaltung:</strong> RevenueCat – prüft deine Käufe bei Apple
+      und teilt unserem Server mit, ob und bis wann dein Abo läuft. RevenueCat erhält
+      dafür deine Nutzer-ID bei uns (eine zufällige Zeichenfolge, nicht deinen Namen
+      und nicht deine E-Mail-Adresse), die Käufe und Verlängerungen deines Abos aus
+      dem App Store sowie technische Angaben wie die Version von App und
+      Betriebssystem, das Land deines App Stores und deine IP-Adresse.</li>
+      <li><strong>E-Mail-Versand:</strong> Resend – verschickt die Mails zum
+      Bestätigen deiner Adresse und zum Zurücksetzen des Passworts.</li>
+      <li><strong>Webseite:</strong> GitHub Pages – stellt diese Seiten unter
+      tracker-yourfuture.com bereit. Beim Aufruf verarbeitet GitHub deine IP-Adresse
+      und speichert sie aus Sicherheitsgründen. Cookies oder Tracking setzen wir
+      dort nicht ein.</li>
     </ul>
+    <p>Apple ist für den Kauf kein Auftragsverarbeiter: Den Kauf schließt du mit
+    Apple ab, und Apple verarbeitet deine Zahlungsdaten in eigener Verantwortung
+    nach seiner Datenschutzrichtlinie. Von RevenueCat übernimmt unser Server nur,
+    bis wann dein Abo läuft.</p>
+    <p><strong>Übermittlung in Länder außerhalb der EU:</strong> Render, Google,
+    RevenueCat, Resend und GitHub sind Unternehmen aus den USA, deshalb können deine
+    Daten dort verarbeitet werden. Supabase speichert deine Daten in der EU, kann sie
+    aber auch in den USA und in Singapur verarbeiten. Render, Google, Resend und
+    GitHub sind nach dem EU-US Data Privacy Framework zertifiziert, für das die
+    EU-Kommission ein angemessenes Datenschutzniveau festgestellt hat
+    (Art. 45 DSGVO). Mit Supabase und RevenueCat gelten die Standardvertragsklauseln
+    der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO).</p>
     <p>Deine Bewegungsdaten aus Apple Health werden <strong>nicht</strong> an die
     KI-Analyse weitergegeben. Sie werden ausschließlich auf unserem eigenen Server
     verarbeitet und in der Datenbank bei Supabase gespeichert.</p>
@@ -139,7 +180,9 @@
 
     <h2>6. Speicherdauer</h2>
     <p>Deine Daten werden gespeichert, solange dein Konto besteht. Löschst du dein
-    Konto, werden deine Daten dauerhaft entfernt.</p>
+    Konto, werden deine Daten dauerhaft entfernt, auch dein Eintrag bei RevenueCat.
+    Was Apple über deine Käufe speichert, richtet sich nach der Datenschutzrichtlinie
+    von Apple.</p>
     <p>Damit die kostenlose Probezeit von Pro nicht durch Löschen und erneutes
     Registrieren immer wieder neu beginnt, behalten wir nach dem Löschen nur eine
     nicht umkehrbare Prüfsumme deiner E-Mail-Adresse und das Enddatum deiner
@@ -155,6 +198,12 @@
     <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der
     Verarbeitung sowie auf Datenübertragbarkeit. Außerdem kannst du dich bei einer
     Datenschutz-Aufsichtsbehörde beschweren.</p>
+    <p><strong>Widerspruch:</strong> Verarbeiten wir Daten auf Grundlage unseres
+    berechtigten Interesses (Art. 6 Abs. 1 lit. f DSGVO), etwa die
+    Server-Protokolle, die Coach-Anfragen oder die Prüfsumme für die Probezeit,
+    kannst du dem aus Gründen, die sich aus deiner besonderen Situation ergeben,
+    jederzeit widersprechen (Art. 21 DSGVO). Schreib uns dazu an die oben genannte
+    E-Mail.</p>
     <p><strong>Konto & Daten löschen:</strong> Du kannst dein Konto samt aller Daten
     jederzeit direkt in der App löschen (Profil → „Einstellungen" → „Konto" → „Konto löschen").
     Alternativ schreib uns an die oben genannte E-Mail.</p>
