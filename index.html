@@ -1,15 +1,689 @@
 <!DOCTYPE html>
-<!-- Alte Adresse, auf die App-Builds bis einschließlich 16 verlinken. Nicht löschen. -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="robots" content="noindex">
-  <meta http-equiv="refresh" content="0; url=datenschutz">
-  <link rel="canonical" href="https://tracker-yourfuture.com/datenschutz">
-  <title>Datenschutzerklärung – Tracker</title>
-  <script>location.replace('datenschutz' + location.hash);</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tracker – Kalorien zählen mit Krios</title>
+  <meta name="description" content="Schreib, was du isst. Tracker rechnet mit amtlichen Werten aus dem Bundeslebensmittelschlüssel, und Krios sagt dir, was heute noch passt. Hilfe, Fragen und Kontakt.">
+  <link rel="canonical" href="https://tracker-yourfuture.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:url" content="https://tracker-yourfuture.com/">
+  <meta property="og:title" content="Tracker – Kalorien zählen ist ein Marathon, kein Sprint.">
+  <meta property="og:description" content="Schreib, was du isst. Krios rechnet und sagt dir, was heute noch passt.">
+  <meta name="theme-color" content="#E9E1D2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#100E08" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+/* DM Sans (variabel, alle Stärken, Lizenz OFL in fonts/OFL.txt) liegt selbst auf dem Server: keine Anfrage an Google */
+@font-face{font-family:"DM Sans"; src:url("fonts/DMSans-latin.woff2") format("woff2"); font-weight:100 1000; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+/* Layout: kurze Szenen, in jeder genau ein Krios. Figur und Objekt wechseln die Seite. */
+:root{
+  --bg:#E9E1D2; --surface:#F6F1E7; --ink:#1C1913; --muted:#675F50; --line:#D8CFBC; --track:#DCD3C1;
+  --signal:#C8FF00; --signal-ink:#1B2400;
+  --night:#17140C; --night-2:#211C12; --night-line:#2E2819; --on-night:#F2ECDD; --on-night-soft:#9E967F;
+  /* Farbregel 2 + 1 für die Website: Beige und Tinte setzen den Grundton, Limette ist nur der Kick.
+     Ausnahme: das Handy-Bild zeigt die App 1:1, mit den Mahlzeit-Farben Frühstück / Mittag / Abend. */
+  --button:#1C1913; --morning:#FF8F5A; --evening:#A78BFA;
+  --halo:rgba(28,25,19,.07); --shadow:0 14px 34px rgba(28,25,19,.09);
+  --font:"DM Sans",ui-sans-serif,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  /* Bewegung nach transitions.dev: kurz, weich, mit Feder */
+  --ease-out:cubic-bezier(.22,1,.36,1); --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --dur-quick:200ms; --dur:500ms; --stagger:70ms;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#100E08; --surface:#1A1710; --ink:#F2ECDD; --muted:#A49C86; --line:#2C2619; --track:#2C2619;
+    --night-line:#2C2619; --halo:rgba(200,255,0,.11); --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#100E08; --surface:#1A1710; --ink:#F2ECDD; --muted:#A49C86; --line:#2C2619; --track:#2C2619;
+  --night-line:#2C2619; --halo:rgba(200,255,0,.11); --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:var(--font); font-size:17px; line-height:1.5; -webkit-font-smoothing:antialiased; overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink); outline-offset:3px; border-radius:8px}
+.wrap{max-width:1120px; margin-inline:auto; padding-left:max(20px, env(safe-area-inset-left,0px)); padding-right:max(20px, env(safe-area-inset-right,0px))}
+h1,h2{margin:0; font-weight:760; letter-spacing:-.045em; line-height:.98; text-wrap:balance; font-variation-settings:"opsz" 40}
+h2{font-size:clamp(36px,5vw,60px)}
+p{margin:0; text-wrap:pretty}
+.mono{font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+
+/* ---------- Kopfzeile ---------- */
+.top{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px}
+.brand{display:flex; align-items:center; gap:10px; font-weight:760; font-size:21px; letter-spacing:-.03em; text-decoration:none}
+.brand img{width:34px; height:34px; border-radius:9px}
+.nav{display:flex; gap:26px; font-size:15px}
+.nav a{text-decoration:none; color:var(--muted); transition:color var(--dur-quick) var(--ease-out)}
+.nav a:hover{color:var(--ink)}
+@media (max-width:640px){ .nav a:not(.keep){display:none} }
+
+/* ---------- Knöpfe, Chips, Sprechblasen ---------- */
+.btn{display:inline-flex; align-items:center; gap:12px; min-height:54px; padding:8px 24px 8px 20px; border-radius:999px; background:var(--button); color:var(--signal); border:1px solid var(--line); text-decoration:none; font-family:inherit; font-size:inherit; font-weight:650; line-height:1.15; cursor:pointer; transition:transform var(--dur-quick) var(--ease-out)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn .sub{display:block; font-size:11px; font-weight:500; color:var(--on-night-soft); letter-spacing:.04em}
+.btn .main{display:block; font-size:18px; font-weight:700; color:var(--on-night)}
+.hourglass{width:22px; height:22px; flex:none}
+.pill{display:inline-flex; align-items:center; gap:9px; padding:9px 15px; border-radius:999px; border:1px solid var(--line); background:var(--surface); font-size:14px; color:var(--muted)}
+.pill b{color:var(--ink); font-weight:650}
+.dot{width:8px; height:8px; border-radius:50%; background:var(--ink)}
+
+.bubble{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:12px 18px; font-size:17px; font-weight:550; max-width:24ch; box-shadow:var(--shadow); transform-origin:22px 100%}
+.bubble::after{content:""; position:absolute; left:26px; bottom:-8px; width:14px; height:14px; background:var(--surface); border-right:1px solid var(--line); border-bottom:1px solid var(--line); transform:rotate(45deg); border-bottom-right-radius:3px}
+.bubble .who{display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:500; margin-bottom:2px}
+
+/* Krios: Schein dahinter, leichtes Schweben, Hüpfer beim Hereinkommen */
+.actor{position:relative; display:grid; justify-items:start; gap:14px}
+.actor .krios{position:relative; width:clamp(150px,20vw,230px); height:auto; filter:drop-shadow(0 18px 22px rgba(28,25,19,.16))}
+.actor::before{content:""; position:absolute; left:-10%; bottom:-6%; width:120%; aspect-ratio:1; max-width:340px; background:radial-gradient(closest-side, var(--halo), transparent); pointer-events:none}
+.float{animation:float 4.2s ease-in-out infinite}
+@keyframes float{0%,100%{translate:0 0} 50%{translate:0 -7px}}
+.is-in .hop{animation:hop 760ms var(--ease-spring)}
+@keyframes hop{0%{transform:translateY(0) scale(1,1)} 25%{transform:translateY(2px) scale(1.04,.95)} 55%{transform:translateY(-16px) scale(.98,1.03)} 100%{transform:translateY(0) scale(1,1)}}
+.is-in .bubble.react{animation:nudge 560ms var(--ease-spring) 120ms}
+@keyframes nudge{0%{transform:scale(1)} 40%{transform:scale(1.06) rotate(-1.5deg)} 100%{transform:scale(1)}}
+
+/* Text-Wechsel mit Unschärfe (transitions.dev „Text states swap") */
+.swap{display:inline-block; transition:opacity 180ms var(--ease-out), filter 180ms var(--ease-out), transform 180ms var(--ease-out)}
+.swap.is-out{opacity:0; filter:blur(4px); transform:translateY(5px)}
+
+/* Zahlen-Trommel (transitions.dev „Number pop-in") */
+.drum{display:inline-flex; vertical-align:bottom; line-height:1; height:1.08em; overflow:hidden; font-variant-numeric:tabular-nums}
+.drum .d{display:inline-block; height:1.08em; overflow:hidden}
+.drum .col{display:flex; flex-direction:column; transform:translateY(calc(var(--n,0) * -1.08em)); transition:transform 950ms var(--ease-spring)}
+.drum .col i{display:block; height:1.08em; line-height:1.08em; font-style:normal; text-align:center}
+.drum .sep{display:inline-block; line-height:1.08em}
+
+/* ---------- Hero ---------- */
+.hero{display:grid; grid-template-columns:1.02fr .98fr; gap:40px; align-items:center; padding-block:24px 72px}
+.hero h1{font-size:clamp(44px,6.6vw,84px)}
+.hero h1 .tag{display:inline-block; background:var(--button); color:var(--signal); padding:.02em .2em .08em; border-radius:.2em; margin-top:.06em}
+.lead{font-size:clamp(18px,2vw,21px); color:var(--muted); max-width:30ch; margin-top:22px}
+.cta-row{display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-top:30px}
+.js .reveal{opacity:0; transform:translateY(14px); filter:blur(4px); transition:opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out), filter var(--dur) var(--ease-out); transition-delay:calc(var(--i,0) * var(--stagger))}
+.js .is-shown .reveal{opacity:1; transform:none; filter:none}
+
+.stage{position:relative; width:min(100%,470px); margin-inline:auto; aspect-ratio:470/600; container-type:inline-size; perspective:1300px}
+.stage .krios-hero{position:absolute; left:-2%; bottom:-1%; width:47%; z-index:3}
+.stage .krios-hero img{width:100%; height:auto; filter:drop-shadow(0 22px 26px rgba(28,25,19,.2))}
+.stage .bubble{position:absolute; left:3%; top:36%; z-index:4; font-size:max(14px,3.6cqw)}
+.js .stage .krios-hero{transform:translateY(24px) scale(.9); opacity:0; transition:transform 800ms var(--ease-spring) 250ms, opacity 300ms var(--ease-out) 250ms}
+.js .stage .bubble{transform:scale(.6); opacity:0; transition:transform 600ms var(--ease-spring) 750ms, opacity 200ms var(--ease-out) 750ms}
+.js .is-shown .stage .krios-hero, .js .is-shown .stage .bubble{transform:none; opacity:1}
+
+/* Handy mit nachgebautem Heute-Bildschirm */
+.phone{position:absolute; right:0; top:0; width:61cqw; font-size:3.05cqw; aspect-ratio:9/18.6; background:var(--bg); color:var(--ink); border-radius:2.7em; border:.5em solid #0D0B07; box-shadow:0 30px 60px rgba(28,25,19,.22), inset 0 0 0 1px rgba(255,255,255,.06); overflow:hidden; transform-style:preserve-3d; transition:transform 700ms var(--ease-out); z-index:2}
+.ph-status{display:flex; justify-content:space-between; align-items:center; padding:.95em 1.7em .3em; font-weight:650; font-size:.95em}
+.ph-island{position:absolute; top:.55em; left:50%; translate:-50% 0; width:6.4em; height:1.9em; border-radius:99px; background:#0D0B07}
+.ph-bars{display:flex; gap:.18em; align-items:flex-end}
+.ph-bars i{display:block; width:.22em; background:var(--ink); border-radius:1px}
+.ph-head{display:flex; justify-content:space-between; align-items:flex-end; padding:.9em 1.2em .5em}
+.ph-head h3{margin:0; font-size:1.9em; letter-spacing:-.04em; line-height:1}
+.ph-head span{color:var(--muted); font-size:.8em}
+.ph-chip{display:inline-flex; align-items:center; gap:.4em; margin:0 1.2em .6em; padding:.3em .7em; border-radius:99px; background:var(--button); color:var(--on-night); font-size:.72em; font-weight:650}
+.ph-card{margin:0 .85em .65em; border-radius:1.3em}
+.ph-ring{background:var(--night); color:var(--on-night); padding:1em; display:grid; grid-template-columns:auto 1fr; gap:1em; align-items:center}
+.ring{position:relative; width:7em; height:7em}
+.ring svg{width:100%; height:100%; transform:rotate(-90deg)}
+.ring circle{fill:none; stroke-width:11; stroke-linecap:round}
+.ring .seg{transition:stroke-dasharray 1300ms var(--ease-out)}
+#seg2{transition-delay:350ms}
+.js .phone:not(.on) #seg1{stroke-dasharray:0 100}
+.js .phone:not(.on) #seg2{stroke-dasharray:0 21 0 79}
+.ring-c{position:absolute; inset:0; display:grid; place-content:center; text-align:center}
+.ring-c b{font-size:2.05em; letter-spacing:-.04em; font-weight:760}
+.ring-c small{font-size:.66em; color:var(--on-night-soft); margin-top:.1em}
+.bars{display:grid; gap:.62em; font-size:.7em}
+.bar-l{display:flex; justify-content:space-between; gap:.5em; color:var(--on-night-soft)}
+.bar-l b{color:var(--on-night); font-weight:600; white-space:nowrap}
+.bar{display:flex; gap:2px; height:.5em; border-radius:99px; background:var(--night-2); overflow:hidden; margin-top:.25em}
+.bar i{display:block; height:100%; width:var(--w); background:var(--c); transition:width 1200ms var(--ease-out) 300ms}
+.js .phone:not(.on) .bar i{width:0}
+.ph-coach{background:var(--surface); border:1px solid var(--line); padding:.7em .9em; display:flex; align-items:center; gap:.7em}
+.ph-coach img{width:3.1em; height:auto}
+.ph-coach b{display:block; font-size:1.05em}
+.ph-coach span{display:block; font-size:.76em; color:var(--muted)}
+.ph-coach .chev{margin-left:auto; color:var(--muted); font-size:1.2em}
+.ph-meal{display:flex; align-items:center; gap:.6em; padding:.55em .9em; background:var(--surface); border:1px solid var(--line); border-radius:1em; margin:0 .85em .45em; font-size:.82em}
+.ph-meal i{width:.6em; height:.6em; border-radius:50%; background:var(--c); flex:none}
+.ph-chip i{width:.6em; height:.6em; border-radius:50%; background:var(--signal)}
+.ph-meal span{color:var(--muted); font-size:.85em; display:block}
+.ph-meal b{margin-left:auto; font-weight:650; font-variant-numeric:tabular-nums}
+
+/* ---------- Szenen ---------- */
+.scene{padding-block:clamp(64px,9vw,120px)}
+.scene-grid{display:grid; grid-template-columns:.8fr 1.2fr; gap:clamp(32px,5vw,72px); align-items:center}
+.scene-grid.flip{grid-template-columns:1.2fr .8fr}
+.scene-grid > *{min-width:0}
+.kicker{color:var(--muted); margin-bottom:14px}
+.h2-sub{color:var(--muted); font-size:19px; margin-top:16px; max-width:32ch}
+
+/* Text-Demo */
+.demo{background:var(--surface); border:1px solid var(--line); border-radius:26px; padding:clamp(16px,2.4vw,24px); box-shadow:var(--shadow)}
+.field{display:flex; align-items:center; gap:12px; min-height:62px; border:1.5px solid var(--ink); border-radius:16px; padding:12px 16px; font-size:clamp(18px,2.2vw,21px); font-weight:550; background:var(--bg)}
+.field .ph-label{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); flex:none}
+.caret{width:2px; height:1.2em; background:var(--ink); animation:blink 1s steps(1) infinite; flex:none}
+@keyframes blink{50%{opacity:0}}
+.chips{position:relative; display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 16px}
+.chip{position:relative; z-index:1; border:1px solid var(--line); background:transparent; color:var(--ink); font:inherit; font-size:15px; padding:8px 14px; border-radius:999px; cursor:pointer; transition:color 250ms var(--ease-out), border-color 250ms var(--ease-out)}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{color:var(--on-night); border-color:transparent}
+.chip-ind{position:absolute; left:0; top:0; z-index:0; border-radius:999px; background:var(--button); transition:transform 420ms var(--ease-out), width 420ms var(--ease-out), height 420ms var(--ease-out)}
+.result{background:var(--night); color:var(--on-night); border-radius:20px; padding:clamp(16px,2.4vw,22px); display:grid; grid-template-columns:1fr auto; gap:6px 18px; align-items:end}
+.result .name{font-size:clamp(20px,2.4vw,24px); font-weight:700; letter-spacing:-.02em}
+.result .meta{grid-column:1; color:var(--on-night-soft); display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.bls{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--night-line); border-radius:8px; padding:3px 8px; color:var(--on-night)}
+.bls::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--on-night-soft)}
+.kcal{grid-column:2; grid-row:1 / span 2; text-align:right; color:var(--signal); font-weight:760; font-size:clamp(44px,6vw,64px); letter-spacing:-.04em; line-height:1}
+.kcal small{display:block; font-size:13px; letter-spacing:.06em; font-family:var(--mono); color:var(--on-night-soft); font-weight:400; text-transform:uppercase; margin-top:4px}
+.macros{grid-column:1 / -1; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; padding-top:14px; border-top:1px solid var(--night-line)}
+.macros div{display:grid; gap:2px}
+.macros b{font-size:22px; font-weight:700; letter-spacing:-.02em}
+.macros div > span{font-size:13px; color:var(--on-night-soft)}
+.demo-note{margin-top:12px; font-size:13px; color:var(--muted)}
+
+/* Großes Zahlen-Band */
+.band{position:relative; overflow:hidden; background:var(--night); color:var(--on-night); border:1px solid var(--night-line); border-radius:32px; padding:clamp(28px,5vw,56px); display:grid; grid-template-columns:1fr auto; gap:24px; align-items:end}
+.band .big{font-size:clamp(84px,17vw,210px); font-weight:780; letter-spacing:-.06em; line-height:.9; color:var(--signal)}
+.band p{font-size:clamp(19px,2.2vw,24px); max-width:22ch; margin-top:14px; font-weight:550}
+.band p.src{color:var(--on-night-soft); margin-top:14px; max-width:none; font-size:12px; font-weight:400}
+.band .peek{width:clamp(110px,15vw,180px); height:auto; align-self:end; margin-bottom:calc(-1 * clamp(28px,5vw,56px) - 2px); transform-origin:50% 100%}
+.is-in .peek{animation:peek 900ms var(--ease-spring)}
+@keyframes peek{0%{transform:translateY(0)} 30%{transform:translateY(26%)} 100%{transform:translateY(0)}}
+
+/* Coach */
+.thread{background:var(--surface); border:1px solid var(--line); border-radius:26px; padding:clamp(16px,2.4vw,22px); box-shadow:var(--shadow); display:grid; gap:12px}
+.msgs{display:grid; gap:10px; min-height:150px; align-content:end}
+.msg{max-width:85%; padding:11px 16px; border-radius:18px; font-size:16px; line-height:1.4; animation:msg-in 420ms var(--ease-spring)}
+.msg.me{justify-self:end; background:var(--button); color:var(--on-night); border-bottom-right-radius:6px}
+.msg.k{justify-self:start; background:var(--bg); border:1px solid var(--line); border-bottom-left-radius:6px}
+.msg.k b{display:block; font-size:12px; font-family:var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:500}
+@keyframes msg-in{from{transform:translateY(8px) scale(.96); opacity:0} to{transform:none; opacity:1}}
+.msg .w{display:inline-block; animation:word 360ms var(--ease-out) both; animation-delay:calc(var(--i) * 45ms)}
+@keyframes word{from{opacity:0; filter:blur(4px); transform:translateY(4px)} to{opacity:1; filter:none; transform:none}}
+.typing{display:inline-flex; gap:5px; padding:4px 0}
+.typing i{width:7px; height:7px; border-radius:50%; background:var(--muted); animation:dots 1s var(--ease-out) infinite}
+.typing i:nth-child(2){animation-delay:.15s} .typing i:nth-child(3){animation-delay:.3s}
+@keyframes dots{0%,100%{opacity:.25; transform:translateY(0)} 40%{opacity:1; transform:translateY(-4px)}}
+.asks{display:flex; flex-wrap:wrap; gap:8px; padding-top:12px; border-top:1px solid var(--line)}
+.ask{border:1px solid var(--line); background:var(--bg); color:var(--ink); font:inherit; font-size:15px; font-weight:550; padding:9px 15px; border-radius:999px; cursor:pointer; transition:transform var(--dur-quick) var(--ease-out), border-color var(--dur-quick)}
+.ask:hover{border-color:var(--ink); transform:translateY(-1px)}
+.ask:active{transform:scale(.97)}
+.ask:disabled{opacity:.45; cursor:default; transform:none}
+.poses{display:grid; width:clamp(150px,20vw,230px)}
+.poses img{grid-area:1/1; width:100%; height:auto; filter:drop-shadow(0 18px 22px rgba(28,25,19,.16)); transition:opacity 320ms var(--ease-out), transform 420ms var(--ease-spring), filter 320ms var(--ease-out)}
+.poses img:not(.on){opacity:0; transform:scale(.9) rotate(-3deg); filter:blur(6px)}
+
+/* Hilfe */
+.help-grid{display:grid; grid-template-columns:.75fr 1.25fr; gap:clamp(32px,5vw,72px); align-items:start}
+.help-grid > *{min-width:0}
+.help-side{position:sticky; top:24px; display:grid; gap:22px}
+.qa{border-bottom:1px solid var(--line)}
+.qa:first-child{border-top:1px solid var(--line)}
+.q{width:100%; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 0; background:none; border:0; color:inherit; font:inherit; font-size:clamp(18px,2vw,21px); font-weight:650; letter-spacing:-.01em; text-align:left; cursor:pointer}
+.plus{position:relative; width:30px; height:30px; flex:none; border-radius:50%; border:1px solid var(--line); transition:transform 380ms var(--ease-spring), background 250ms, border-color 250ms}
+.plus::before,.plus::after{content:""; position:absolute; left:50%; top:50%; width:11px; height:1.5px; background:currentColor; translate:-50% -50%}
+.plus::after{rotate:90deg}
+.qa.open .plus{transform:rotate(45deg); background:var(--button); color:var(--signal); border-color:var(--button)}
+.a{display:grid; grid-template-rows:0fr; transition:grid-template-rows 420ms var(--ease-out)}
+.a > div{overflow:hidden}
+.a p{color:var(--muted); max-width:58ch; padding-bottom:22px; opacity:0; transform:translateY(-4px); transition:opacity 300ms var(--ease-out), transform 300ms var(--ease-out)}
+.qa.open .a{grid-template-rows:1fr}
+.qa.open .a p{opacity:1; transform:none; transition-delay:80ms}
+.path{font-family:var(--mono); font-size:.88em; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:1px 6px; -webkit-box-decoration-break:clone; box-decoration-break:clone}
+
+/* Kontakt */
+.contact{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:32px; padding:clamp(24px,4.5vw,52px); display:grid; grid-template-columns:1.3fr .7fr; gap:24px; align-items:center; box-shadow:var(--shadow)}
+.contact > *{min-width:0}
+.mail-row{display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:26px}
+.mail{font-size:clamp(18px,2.4vw,24px); font-weight:650; letter-spacing:-.02em; user-select:all; overflow-wrap:anywhere; padding:10px 16px; border-radius:14px; background:var(--bg); border:1px solid var(--line)}
+.copy{min-height:48px; padding:0 18px; gap:8px}
+.copy svg{width:18px; height:18px; flex:none}
+.copy .chk path{stroke-dasharray:24; stroke-dashoffset:24; transition:stroke-dashoffset 420ms var(--ease-out) 60ms}
+.copy.done .chk path{stroke-dashoffset:0}
+.copy .ico-copy, .copy .chk{transition:opacity 200ms, transform 300ms var(--ease-spring)}
+.copy:not(.done) .chk{display:none}
+.copy.done .ico-copy{display:none}
+.contact .hint{color:var(--muted); margin-top:16px; font-size:15px}
+.contact .actor{justify-items:center}
+
+/* Fuß */
+.foot{margin-top:clamp(64px,9vw,120px); background:var(--night); color:var(--on-night); border-top:1px solid var(--night-line)}
+.foot .wrap{display:grid; grid-template-columns:1fr auto; gap:28px; align-items:end; padding-block:44px 36px}
+.foot .brand img{background:#000}
+.foot .motto{font-size:clamp(22px,3vw,32px); font-weight:700; letter-spacing:-.03em; line-height:1.1; max-width:20ch; margin-top:18px}
+.foot .motto em{font-style:normal; color:var(--signal)}
+.links{display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:26px; font-size:15px}
+.links a{color:var(--on-night-soft); text-decoration:none}
+.links a:hover{color:var(--on-night)}
+.foot .copy-note{color:var(--on-night-soft); font-size:13px; margin-top:18px}
+.foot .bye{width:clamp(96px,12vw,140px); height:auto; transform-origin:50% 100%; transition:transform 500ms var(--ease-spring)}
+.foot .bye:hover{transform:rotate(-6deg) translateY(-4px)}
+
+/* ---------- Schmal ---------- */
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr; padding-top:8px}
+  .scene-grid, .scene-grid.flip, .help-grid, .contact{grid-template-columns:1fr}
+  .scene-grid.flip .actor{order:-1}
+  .actor{grid-template-columns:auto 1fr; align-items:end; justify-items:start}
+  .actor .bubble{order:2; margin-bottom:24px}
+  .actor .bubble::after{left:-8px; bottom:20px; rotate:90deg}
+  .actor .krios, .poses{width:130px}
+  .help-side{position:static}
+  .help-side > div:first-child{grid-column:1 / -1}
+  .contact .actor{justify-items:start; order:-1}
+  .band{grid-template-columns:1fr}
+  .band .peek{justify-self:end; margin-top:-30px}
+  .foot .wrap{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; transition-delay:0s!important}
+}
+  </style>
 </head>
 <body>
-  <p><a href="datenschutz">Datenschutzerklärung</a></p>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#start"><img src="img/sanduhr.webp" alt="" width="34" height="34">Tracker</a>
+    <nav class="nav" aria-label="Seitenbereiche">
+      <a href="#so-gehts">So geht's</a>
+      <a href="#coach">Coach</a>
+      <a class="keep" href="#hilfe">Hilfe</a>
+      <a class="keep" href="#kontakt">Kontakt</a>
+    </nav>
+  </header>
+
+  <!-- 1 · Hero -->
+  <section class="hero" id="start">
+    <div class="hero-copy">
+      <h1><span class="reveal" style="--i:0">Kalorien zählen ist ein Marathon,</span> <span class="reveal tag" style="--i:1">kein Sprint.</span></h1>
+      <p class="lead reveal" style="--i:2">Schreib, was du isst. Krios rechnet und sagt dir, was heute noch passt.</p>
+      <div class="cta-row reveal" style="--i:3">
+        <span class="btn" role="img" aria-label="Bald im App Store">
+          <svg class="hourglass" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span><span class="sub">Bald im</span><span class="main">App Store</span></span>
+        </span>
+        <span class="pill"><span class="dot"></span><span><b>14 Tage Pro gratis.</b> Ohne Zahlungsdaten.</span></span>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="phone" id="phone" aria-label="Beispiel: der Heute-Bildschirm der App">
+        <div class="ph-island"></div>
+        <div class="ph-status"><span>9:41</span><span class="ph-bars" aria-hidden="true"><i style="height:.35em"></i><i style="height:.5em"></i><i style="height:.65em"></i><i style="height:.8em"></i></span></div>
+        <div class="ph-head"><h3>Heute</h3><span>Mo., 9. Nov.</span></div>
+        <span class="ph-chip"><i></i>Pro · noch 12 Tage</span>
+        <div class="ph-card ph-ring">
+          <div class="ring">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="50" stroke="var(--night-2)"/>
+              <circle class="seg" id="seg1" cx="60" cy="60" r="50" pathLength="100" stroke="var(--morning)" stroke-dasharray="20 80"/>
+              <circle class="seg" id="seg2" cx="60" cy="60" r="50" pathLength="100" stroke="var(--signal)" stroke-dasharray="0 21 32 47"/>
+            </svg>
+            <div class="ring-c"><b data-drum id="ringNum">963</b><small>kcal übrig</small></div>
+          </div>
+          <div class="bars">
+            <div><div class="bar-l"><span>Eiweiß</span><b>60 g</b></div><div class="bar"><i style="--w:12%; --c:var(--morning)"></i><i style="--w:38%; --c:var(--signal)"></i></div></div>
+            <div><div class="bar-l"><span>Kohlenhydrate</span><b>132 g</b></div><div class="bar"><i style="--w:28%; --c:var(--morning)"></i><i style="--w:25%; --c:var(--signal)"></i></div></div>
+            <div><div class="bar-l"><span>Fett</span><b>37 g</b></div><div class="bar"><i style="--w:13%; --c:var(--morning)"></i><i style="--w:40%; --c:var(--signal)"></i></div></div>
+            <div><div class="bar-l"><span>Ballaststoffe</span><b>16 g</b></div><div class="bar"><i style="--w:33%; --c:var(--morning)"></i><i style="--w:19%; --c:var(--signal)"></i></div></div>
+          </div>
+        </div>
+        <div class="ph-card ph-coach">
+          <img src="img/krios-winken.webp" alt="" width="45" height="60">
+          <div><b>Noch 963 kcal</b><span>Frag mich, was jetzt noch passt.</span></div>
+          <span class="chev" aria-hidden="true">›</span>
+        </div>
+        <div class="ph-meal"><i style="--c:var(--morning)"></i><div>Haferflocken mit Milch<span>Frühstück</span></div><b>441</b></div>
+        <div class="ph-meal"><i style="--c:var(--signal)"></i><div>Döner<span>Mittag</span></div><b>696</b></div>
+      </div>
+      <div class="bubble"><span class="who">Krios</span>Hi, ich bin Krios!</div>
+      <div class="krios-hero"><img class="float" src="img/krios-winken.webp" alt="Krios, der Panda-Coach, winkt" width="450" height="600"></div>
+    </div>
+  </section>
+</div>
+
+<!-- 2 · Text-Demo -->
+<section class="scene" id="so-gehts">
+  <div class="wrap scene-grid">
+    <div class="actor watch">
+      <div class="bubble react"><span class="who">Krios</span>Schreib's, wie du's sagen würdest.</div>
+      <img class="krios hop" src="img/krios-daumen_hoch.webp" alt="Krios zeigt Daumen hoch" width="463" height="600">
+    </div>
+    <div>
+      <p class="mono kicker">Erfassen per Text</p>
+      <h2>Schreib's einfach.</h2>
+      <div class="demo" style="margin-top:28px">
+        <div class="field" aria-live="polite"><span class="ph-label">Ich hatte</span><span id="typed">einen Döner</span><span class="caret" aria-hidden="true"></span></div>
+        <div class="chips" id="chips" role="group" aria-label="Beispiele">
+          <span class="chip-ind" id="chipInd" aria-hidden="true"></span>
+          <button class="chip" type="button" data-i="0" aria-pressed="true">einen Döner</button>
+          <button class="chip" type="button" data-i="1" aria-pressed="false">Currywurst mit Pommes</button>
+          <button class="chip" type="button" data-i="2" aria-pressed="false">eine Pizza Margherita</button>
+          <button class="chip" type="button" data-i="3" aria-pressed="false">Haferflocken mit Milch</button>
+        </div>
+        <div class="result">
+          <div class="name"><span class="swap" id="rName">Döner Kebab</span></div>
+          <div class="meta"><span class="swap" id="rGram">350 g</span><span class="bls mono swap" id="rBls">BLS Y921162</span></div>
+          <div class="kcal"><span data-drum id="rKcal">696</span><small>kcal</small></div>
+          <div class="macros">
+            <div><b><span data-drum id="rE">46</span> g</b><span>Eiweiß</span></div>
+            <div><b><span data-drum id="rF">28</span> g</b><span>Fett</span></div>
+            <div><b><span data-drum id="rK">63</span> g</b><span>Kohlenhydrate</span></div>
+          </div>
+        </div>
+        <p class="demo-note">Werte für eine Standardportion aus unserem Katalog. In der App passt du die Menge an.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · Zahl -->
+<section class="wrap watch" aria-label="Datenquelle">
+  <div class="band">
+    <div>
+      <div class="big"><span data-drum id="blsNum">7.140</span></div>
+      <p>Lebensmittel mit amtlichen Werten.</p>
+      <p class="mono src">Bundeslebensmittelschlüssel 4.0 · Max Rubner-Institut</p>
+    </div>
+    <img class="peek" src="img/krios-kopf.webp" alt="Krios schaut von unten ins Bild" width="264" height="264">
+  </div>
+</section>
+
+<!-- 4 · Coach -->
+<section class="scene" id="coach">
+  <div class="wrap scene-grid flip">
+    <div>
+      <p class="mono kicker">Coach</p>
+      <h2>Frag Krios, was noch passt.</h2>
+      <div class="thread" style="margin-top:28px">
+        <div class="msgs" id="msgs" aria-live="polite">
+          <div class="msg me">Was soll ich noch essen?</div>
+          <div class="msg k"><b>Krios</b>Noch 963 kcal übrig. Dein Eiweiß hinkt etwas hinterher, 60 g fehlen noch.</div>
+        </div>
+        <div class="asks">
+          <button class="ask" type="button" data-ask="pizza">Kann ich noch eine Pizza essen?</button>
+          <button class="ask" type="button" data-ask="rest">Was soll ich noch essen?</button>
+        </div>
+      </div>
+    </div>
+    <div class="actor watch">
+      <div class="bubble react"><span class="who">Krios</span><span class="swap" id="coachSay">Tipp eine Frage an.</span></div>
+      <div class="poses hop" id="poses">
+        <img class="on" data-pose="think" src="img/krios-nachdenken.webp" alt="Krios denkt nach" width="373" height="600">
+        <img data-pose="yes" src="img/krios-daumen_hoch.webp" alt="" width="463" height="600">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · Hilfe -->
+<section class="scene" id="hilfe" style="padding-top:0">
+  <div class="wrap help-grid">
+    <div class="help-side actor watch">
+      <div>
+        <p class="mono kicker">Hilfe</p>
+        <h2>Fragen?</h2>
+      </div>
+      <div class="bubble react"><span class="who">Krios</span><span class="swap" id="helpSay">Frag ruhig. Hier steht das Wichtigste.</span></div>
+      <img class="krios hop" src="img/krios-nachdenken.webp" alt="Krios denkt nach" width="373" height="600">
+    </div>
+    <div class="faq" id="faq">
+      <div class="qa open" data-say="Geht in zwei Schritten.">
+        <button class="q" type="button" aria-expanded="true" aria-controls="a1" id="q1">Wie kündige ich Tracker Pro?<span class="plus" aria-hidden="true"></span></button>
+        <div class="a" id="a1" role="region" aria-labelledby="q1"><div><p>In der App unter <span class="path">Einstellungen → Abo verwalten</span>. Oder auf dem iPhone unter <span class="path">Einstellungen → dein Name → Abonnements</span>. Das Abo läuft über Apple.</p></div></div>
+      </div>
+      <div class="qa" data-say="Keine Sorge, da wird nichts abgebucht.">
+        <button class="q" type="button" aria-expanded="false" aria-controls="a2" id="q2">Was passiert nach den 14 Tagen?<span class="plus" aria-hidden="true"></span></button>
+        <div class="a" id="a2" role="region" aria-labelledby="q2"><div><p>Du nutzt Tracker einfach gratis weiter. Es wird nichts abgebucht, weil du für die Probezeit keine Zahlungsdaten angibst. Pro kaufst du nur, wenn du willst.</p></div></div>
+      </div>
+      <div class="qa" data-say="Darauf bin ich stolz.">
+        <button class="q" type="button" aria-expanded="false" aria-controls="a3" id="q3">Woher kommen die Nährwerte?<span class="plus" aria-hidden="true"></span></button>
+        <div class="a" id="a3" role="region" aria-labelledby="q3"><div><p>Aus dem Bundeslebensmittelschlüssel (BLS) des Max Rubner-Instituts. Bei Barcodes nehmen wir die Herstellerangaben aus Open Food Facts. Was dort fehlt, schätzt die KI.</p></div></div>
+      </div>
+      <div class="qa" data-say="Schade, aber klar.">
+        <button class="q" type="button" aria-expanded="false" aria-controls="a4" id="q4">Wie lösche ich mein Konto?<span class="plus" aria-hidden="true"></span></button>
+        <div class="a" id="a4" role="region" aria-labelledby="q4"><div><p>In der App unter <span class="path">Einstellungen → Konto löschen</span>. Damit sind auch deine Mahlzeiten und Werte weg. Ein laufendes Abo kündigst du zusätzlich bei Apple.</p></div></div>
+      </div>
+      <div class="qa" data-say="Passiert jedem.">
+        <button class="q" type="button" aria-expanded="false" aria-controls="a5" id="q5">Ich habe mein Passwort vergessen.<span class="plus" aria-hidden="true"></span></button>
+        <div class="a" id="a5" role="region" aria-labelledby="q5"><div><p>Tippe beim Anmelden auf <span class="path">Passwort vergessen?</span>. Du bekommst einen Link per E-Mail und legst ein neues Passwort fest.</p></div></div>
+      </div>
+      <div class="qa" data-say="Wichtig zu wissen.">
+        <button class="q" type="button" aria-expanded="false" aria-controls="a6" id="q6">Ist Tracker ein Medizinprodukt?<span class="plus" aria-hidden="true"></span></button>
+        <div class="a" id="a6" role="region" aria-labelledby="q6"><div><p>Nein. Alle Werte sind Schätzungen. Wenn du krank bist oder eine Diät brauchst, sprich bitte mit deiner Ärztin oder deinem Arzt.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · Kontakt -->
+<section class="wrap" id="kontakt">
+  <div class="contact">
+    <div>
+      <p class="mono kicker">Kontakt</p>
+      <h2>Nicht gefunden?<br>Schreib uns.</h2>
+      <div class="mail-row">
+        <span class="mail" id="mail">support@tracker-yourfuture.com</span>
+        <button class="btn copy" type="button" id="copyBtn">
+          <svg class="ico-copy" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <svg class="chk" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="swap" id="copyLabel">Kopieren</span>
+        </button>
+      </div>
+      <p class="hint">Schreib kurz dazu, was passiert ist und welches iPhone du hast. Anschrift und Telefon stehen im <a href="impressum">Impressum</a>.</p>
+    </div>
+    <div class="actor watch">
+      <div class="bubble react"><span class="who">Krios</span>Ich sag Mico Bescheid.</div>
+      <img class="krios hop" src="img/krios-komm_mit.webp" alt="Krios winkt dich heran" width="449" height="600">
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>
+      <a class="brand" href="#start"><img src="img/sanduhr.webp" alt="" width="34" height="34">Tracker</a>
+      <p class="motto">Kalorien zählen ist ein Marathon, <em>kein Sprint.</em></p>
+      <nav class="links" aria-label="Rechtliches">
+        <a href="datenschutz">Datenschutz</a>
+        <a href="nutzungsbedingungen">Nutzungsbedingungen</a>
+        <a href="impressum">Impressum</a>
+      </nav>
+      <p class="copy-note">© 2026 Mico Christmann</p>
+    </div>
+    <img class="bye float" src="img/krios-winken.webp" alt="Krios winkt zum Abschied" width="450" height="600">
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const $ = s => document.querySelector(s);
+
+  /* Kommt man mit #hilfe o. Ä. an (z. B. über /hilfe aus der App), sofort hinspringen statt weich scrollen */
+  function jumpToHash(){
+    const t = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (!t) return;
+    const root = document.documentElement;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, t.getBoundingClientRect().top + window.scrollY);
+    root.style.scrollBehavior = '';
+  }
+  jumpToHash();
+  addEventListener('load', jumpToHash);
+
+  /* ---- Zahlen-Trommel ---- */
+  function setDrum(el, value){
+    value = String(value);
+    const old = el._v || '';
+    el.setAttribute('aria-label', value);
+    const sameShape = old.length === value.length && [...value].every((c, i) => /\d/.test(c) === /\d/.test(old[i]));
+    if (!sameShape){
+      el.textContent = '';
+      el.classList.add('drum');
+      [...value].forEach((c, i) => {
+        if (/\d/.test(c)){
+          const d = document.createElement('span'); d.className = 'd'; d.setAttribute('aria-hidden', 'true');
+          const col = document.createElement('span'); col.className = 'col';
+          col.innerHTML = '0123456789'.split('').map(n => '<i>' + n + '</i>').join('');
+          col.style.transitionDelay = (i * 45) + 'ms';
+          col.style.setProperty('--n', 0);
+          d.appendChild(col); el.appendChild(d);
+        } else {
+          const s = document.createElement('span'); s.className = 'sep'; s.setAttribute('aria-hidden', 'true'); s.textContent = c; el.appendChild(s);
+        }
+      });
+      el.offsetWidth;
+    }
+    let k = 0;
+    [...el.children].forEach(ch => {
+      const c = value[k++];
+      if (ch.classList.contains('d')) ch.firstChild.style.setProperty('--n', c);
+    });
+    el._v = value;
+  }
+  const drums = [...document.querySelectorAll('[data-drum]')];
+  drums.forEach(el => { el._final = el.textContent.trim(); });
+  if (!reduce) drums.forEach(el => setDrum(el, el._final.replace(/\d/g, '0')));
+
+  /* ---- Hero beim Laden ---- */
+  const hero = $('.hero'), phone = $('#phone');
+  /* Timer statt requestAnimationFrame: läuft auch in Hintergrund-Tabs und beim Vorschaubild */
+  hero.offsetWidth;
+  setTimeout(() => {
+    hero.classList.add('is-shown');
+    phone.classList.add('on');
+    $('#ringNum')._done = true;
+    setTimeout(() => setDrum($('#ringNum'), $('#ringNum')._final), reduce ? 0 : 500);
+  }, 40);
+
+  /* Handy kippt leicht mit der Maus (transitions.dev „3D tilt") */
+  const stage = $('#stage');
+  if (!reduce && matchMedia('(hover: hover)').matches){
+    stage.addEventListener('pointermove', e => {
+      const r = stage.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      phone.style.transform = `rotateY(${x * 12}deg) rotateX(${y * -9}deg)`;
+    });
+    stage.addEventListener('pointerleave', () => { phone.style.transform = ''; });
+  }
+
+  /* ---- Szenen: Krios hüpft, wenn du ankommst; Zahlen rollen einmal ein ---- */
+  let demoVisible = false;
+  const io = new IntersectionObserver(entries => entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    const el = en.target;
+    el.classList.remove('is-in'); el.offsetWidth; el.classList.add('is-in');
+    el.querySelectorAll('[data-drum]').forEach(d => { if (!d._done){ d._done = true; setDrum(d, d._final); } });
+  }), {threshold: .3});
+  document.querySelectorAll('.watch, .demo').forEach(el => io.observe(el));
+  const demoIO = new IntersectionObserver(([en]) => { demoVisible = en.isIntersecting; }, {threshold: .3});
+  demoIO.observe($('.demo'));
+
+  /* ---- Text-Demo ---- */
+  const foods = [
+    {q:'einen Döner', name:'Döner Kebab', g:350, kcal:696, e:46, f:28, k:63, bls:'Y921162'},
+    {q:'Currywurst mit Pommes', name:'Currywurst mit Pommes', g:450, kcal:976, e:30, f:58, k:78, bls:'Y944062'},
+    {q:'eine Pizza Margherita', name:'Pizza Margherita', g:350, kcal:833, e:27, f:48, k:70, bls:'X912033'},
+    {q:'Haferflocken mit Milch', name:'Haferflocken mit Milch', g:300, kcal:441, e:14, f:9, k:69, bls:'X092040'}
+  ];
+  const chips = [...document.querySelectorAll('.chip')], ind = $('#chipInd'), typed = $('#typed');
+  let cur = 0, run = 0, touched = false;
+  function placeInd(){
+    const b = chips[cur];
+    ind.style.width = b.offsetWidth + 'px'; ind.style.height = b.offsetHeight + 'px';
+    ind.style.transform = `translate(${b.offsetLeft}px, ${b.offsetTop}px)`;
+  }
+  async function swapText(el, txt){
+    if (reduce){ el.textContent = txt; return; }
+    el.classList.add('is-out'); await wait(170);
+    el.textContent = txt; el.classList.remove('is-out');
+  }
+  async function show(i){
+    const my = ++run; cur = i;
+    chips.forEach((c, j) => c.setAttribute('aria-pressed', j === i));
+    placeInd();
+    const f = foods[i];
+    if (reduce){ typed.textContent = f.q; }
+    else {
+      typed.textContent = '';
+      for (const ch of f.q){ if (my !== run) return; typed.textContent += ch; await wait(32 + Math.random() * 38); }
+      await wait(220);
+    }
+    if (my !== run) return;
+    swapText($('#rName'), f.name); swapText($('#rGram'), f.g + ' g'); swapText($('#rBls'), 'BLS ' + f.bls);
+    ['#rKcal', '#rE', '#rF', '#rK'].forEach(s => { $(s)._done = true; });
+    setDrum($('#rKcal'), f.kcal); setDrum($('#rE'), f.e); setDrum($('#rF'), f.f); setDrum($('#rK'), f.k);
+  }
+  chips.forEach((c, i) => c.addEventListener('click', () => { touched = true; show(i); }));
+  addEventListener('resize', placeInd);
+  document.fonts && document.fonts.ready.then(placeInd);
+  placeInd();
+  if (!reduce) setInterval(() => { if (!touched && demoVisible && !document.hidden) show((cur + 1) % foods.length); }, 4600);
+
+  /* ---- Coach ---- */
+  const answers = {
+    pizza: {q:'Kann ich noch eine Pizza essen?', a:'Passt! Danach bleiben dir noch 130 kcal. Achte morgen etwas mehr auf dein Eiweiß.', say:'Passt!'},
+    rest:  {q:'Was soll ich noch essen?', a:'Noch 963 kcal übrig. Dein Eiweiß hinkt etwas hinterher, 60 g fehlen noch.', say:'Eiweiß fehlt noch.'}
+  };
+  const msgs = $('#msgs'), asks = [...document.querySelectorAll('.ask')], poses = [...document.querySelectorAll('#poses img')];
+  const pose = p => poses.forEach(img => img.classList.toggle('on', img.dataset.pose === p));
+  function trim(){ while (msgs.children.length > 4) msgs.firstElementChild.remove(); }
+  asks.forEach(b => b.addEventListener('click', async () => {
+    const r = answers[b.dataset.ask];
+    asks.forEach(x => x.disabled = true);
+    const me = document.createElement('div'); me.className = 'msg me'; me.textContent = r.q; msgs.appendChild(me); trim();
+    pose('think'); swapText($('#coachSay'), 'Moment, ich rechne …');
+    const k = document.createElement('div'); k.className = 'msg k';
+    k.innerHTML = '<b>Krios</b><span class="typing" aria-label="Krios schreibt"><i></i><i></i><i></i></span>';
+    await wait(reduce ? 0 : 320); msgs.appendChild(k); trim();
+    await wait(reduce ? 0 : 1100);
+    k.innerHTML = '<b>Krios</b>' + r.a.split(' ').map((w, i) => `<span class="w" style="--i:${i}">${w}</span>`).join(' ');
+    pose('yes'); swapText($('#coachSay'), r.say);
+    asks.forEach(x => x.disabled = false);
+  }));
+
+  /* ---- Hilfe ---- */
+  const helpSay = $('#helpSay');
+  document.querySelectorAll('.qa').forEach(qa => {
+    const btn = qa.querySelector('.q');
+    btn.addEventListener('click', () => {
+      const open = !qa.classList.contains('open');
+      qa.classList.toggle('open', open); btn.setAttribute('aria-expanded', open);
+      if (open){
+        swapText(helpSay, qa.dataset.say);
+        const side = $('.help-side'); side.classList.remove('is-in'); side.offsetWidth; side.classList.add('is-in');
+      }
+    });
+  });
+
+  /* ---- Kontakt: E-Mail kopieren (transitions.dev „Success check") ---- */
+  const copyBtn = $('#copyBtn'), mail = $('#mail');
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(mail.textContent.trim());
+      copyBtn.classList.add('done'); swapText($('#copyLabel'), 'Kopiert');
+      setTimeout(() => { copyBtn.classList.remove('done'); swapText($('#copyLabel'), 'Kopieren'); }, 2200);
+    } catch (e) {
+      const range = document.createRange(); range.selectNodeContents(mail);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      swapText($('#copyLabel'), 'Markiert');
+    }
+  });
+})();
+</script>
 </body>
 </html>
