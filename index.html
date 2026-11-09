@@ -83,8 +83,10 @@ p{margin:0; text-wrap:pretty}
 .bubble .who{display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:500; margin-bottom:2px}
 
 /* Krios: Schein dahinter, leichtes Schweben, Hüpfer beim Hereinkommen */
+/* Kein filter:drop-shadow an bewegten Krios-Bildern: Safari schneidet den Schatten während
+   einer Animation am Bildrand ab, dann sieht man einen Kasten um Krios. */
 .actor{position:relative; display:grid; justify-items:start; gap:14px}
-.actor .krios{position:relative; width:clamp(150px,20vw,230px); height:auto; filter:drop-shadow(0 18px 22px rgba(28,25,19,.16))}
+.actor .krios{position:relative; width:clamp(150px,20vw,230px); height:auto}
 .actor::before{content:""; position:absolute; left:-10%; bottom:-6%; width:120%; aspect-ratio:1; max-width:340px; background:radial-gradient(closest-side, var(--halo), transparent); pointer-events:none}
 .float{animation:float 4.2s ease-in-out infinite}
 @keyframes float{0%,100%{translate:0 0} 50%{translate:0 -7px}}
@@ -115,7 +117,7 @@ p{margin:0; text-wrap:pretty}
 
 .stage{position:relative; width:min(100%,470px); margin-inline:auto; aspect-ratio:470/600; container-type:inline-size; perspective:1300px}
 .stage .krios-hero{position:absolute; left:-2%; bottom:-1%; width:47%; z-index:3}
-.stage .krios-hero img{width:100%; height:auto; filter:drop-shadow(0 22px 26px rgba(28,25,19,.2))}
+.stage .krios-hero img{width:100%; height:auto}
 .stage .bubble{position:absolute; left:3%; top:36%; z-index:4; font-size:max(14px,3.6cqw)}
 .js .stage .krios-hero{transform:translateY(24px) scale(.9); opacity:0; transition:transform 800ms var(--ease-spring) 250ms, opacity 300ms var(--ease-out) 250ms}
 .js .stage .bubble{transform:scale(.6); opacity:0; transition:transform 600ms var(--ease-spring) 750ms, opacity 200ms var(--ease-out) 750ms}
@@ -221,7 +223,7 @@ p{margin:0; text-wrap:pretty}
 .ask:active{transform:scale(.97)}
 .ask:disabled{opacity:.45; cursor:default; transform:none}
 .poses{display:grid; width:clamp(150px,20vw,230px)}
-.poses img{grid-area:1/1; width:100%; height:auto; filter:drop-shadow(0 18px 22px rgba(28,25,19,.16)); transition:opacity 320ms var(--ease-out), transform 420ms var(--ease-spring), filter 320ms var(--ease-out)}
+.poses img{grid-area:1/1; width:100%; height:auto; filter:blur(0); transition:opacity 320ms var(--ease-out), transform 420ms var(--ease-spring), filter 320ms var(--ease-out)}
 .poses img:not(.on){opacity:0; transform:scale(.9) rotate(-3deg); filter:blur(6px)}
 
 /* Hilfe */
